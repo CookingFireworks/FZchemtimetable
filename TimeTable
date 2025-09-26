@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>湖南师大附中桃子湖校区课表系统 - 化学教师版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            color: #1a5276;
+            margin-bottom: 8px;
+            font-size: 1.4rem;
+        }
+        
+        .school-info {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .filters {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            width: 100%;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: white;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+        
+        .search-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .search-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .teacher-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 20px;
+        }
+        
+        .teacher-info h3 {
+            margin-bottom: 10px;
+            color: #1a5276;
+            font-size: 1.2rem;
+        }
+        
+        .teacher-info p {
+            margin-bottom: 5px;
+        }
+        
+        /* 课表卡片布局 */
+        .schedule-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .day-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .day-header {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .periods-list {
+            padding: 0;
+        }
+        
+        .period-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        
+        .period-item:last-child {
+            border-bottom: none;
+        }
+        
+        .period-time {
+            font-weight: bold;
+            color: #2c3e50;
+            flex: 0 0 80px;
+            font-size: 0.9rem;
+        }
+        
+        .course-details {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .course-subject {
+            font-weight: bold;
+            color: #1a5276;
+            margin-bottom: 3px;
+            font-size: 1rem;
+        }
+        
+        .course-class {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .no-class {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        /* 桌面布局 */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .filters {
+                flex-direction: row;
+                gap: 20px;
+            }
+            
+            .filter-group {
+                flex: 1;
+            }
+            
+            .search-btn {
+                width: auto;
+                align-self: flex-end;
+                padding: 10px 25px;
+            }
+            
+            .schedule-cards {
+                display: none;
+            }
+            
+            .schedule-table {
+                display: table;
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            th, td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: center;
+            }
+            
+            th {
+                background-color: #3498db;
+                color: white;
+                font-weight: bold;
+            }
+            
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            
+            .period {
+                background-color: #2c3e50;
+                color: white;
+                font-weight: bold;
+            }
+            
+            .course-info {
+                font-size: 14px;
+            }
+        }
+        
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>湖南师大附中桃子湖校区课表系统</h1>
+            <div class="school-info">2025-2026学年度第一学期 - 化学教师版</div>
+        </header>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label for="grade-select">选择年级：</label>
+                <select id="grade-select">
+                    <option value="">请选择年级</option>
+                    <option value="高一">高一年级</option>
+                    <option value="高二">高二年级</option>
+                    <option value="高三">高三年级</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="teacher-select">选择教师：</label>
+                <select id="teacher-select" disabled>
+                    <option value="">请先选择年级</option>
+                </select>
+            </div>
+            
+            <button class="search-btn" id="search-btn">搜索课表</button>
+        </div>
+        
+        <div class="teacher-info" id="teacher-info">
+            <!-- 教师信息将在这里显示 -->
+        </div>
+        
+        <!-- 移动端课表卡片布局 -->
+        <div class="schedule-cards" id="schedule-cards">
+            <!-- 课表卡片将在这里动态生成 -->
+        </div>
+        
+        <!-- 桌面端课表表格布局 -->
+        <div class="schedule-table">
+            <table id="schedule-table">
+                <!-- 课表将在这里动态生成 -->
+            </table>
+        </div>
+        
+        <div class="no-data" id="no-data" style="display: none;">
+            请选择年级和教师查看课表
+        </div>
+    </div>
+
+    <script>
+        // 化学教师数据 - 包含高一、高二和高三
+        const chemistryTeachers = [
+            // 高一化学老师
+            {
+                name: "葛毓真",
+                id: "110013455795",
+                grade: "高一",
+                schedule: {
+                    "星期一": {
+                        "第六节": { subject: "化学", class: "2522" },
+                        "第七节": { subject: "化学", class: "2516" },
+                        "第八节": { subject: "化学", class: "2517" }
+                    },
+                    "星期二": {
+                        "第五节": { subject: "化学", class: "2519" }
+                    },
+                    "星期三": {
+                        "第六节": { subject: "化学", class: "2516" },
+                        "第七节": { subject: "化学", class: "2517" },
+                        "第八节": { subject: "化学", class: "2522" }
+                    },
+                    "星期四": {
+                        "第一节": { subject: "化学", class: "2519" },
+                        "第二节": { subject: "化学", class: "2522" }
+                    },
+                    "星期五": {
+                        "第二节": { subject: "化学", class: "2517" },
+                        "第三节": { subject: "化学", class: "2519" },
+                        "第四节": { subject: "化学", class: "2516" }
+                    }
+                }
+            },
+            {
+                name: "姜平贵",
+                id: "110013269595",
+                grade: "高一",
+                schedule: {
+                    "星期一": {
+                        "第六节": { subject: "化学", class: "2515" },
+                        "第八节": { subject: "化学", class: "2502" }
+                    },
+                    "星期二": {
+                        "第二节": { subject: "化学", class: "2521" },
+                        "第三节": { subject: "化学", class: "2503" }
+                    },
+                    "星期三": {
+                        "第一节": { subject: "化学", class: "2503" },
+                        "第三节": { subject: "化学", class: "2502" },
+                        "第五节": { subject: "化学", class: "2515" },
+                        "第七节": { subject: "化学", class: "2521" }
+                    },
+                    "星期四": {
+                        // 无化学课
+                    },
+                    "星期五": {
+                        "第六节": { subject: "化学", class: "2521" },
+                        "第七节": { subject: "化学", class: "2502" },
+                        "第八节": { subject: "化学", class: "2503" }
+                    }
+                }
+            },
+            {
+                name: "吴瑶",
+                id: "110013269741",
+                grade: "高一",
+                schedule: {
+                    "星期一": {
+                        "第七节": { subject: "化学", class: "2524AP" },
+                        "第八节": { subject: "化学", class: "2509" }
+                    },
+                    "星期二": {
+                        // 无化学课
+                    },
+                    "星期三": {
+                        "第五节": { subject: "化学", class: "2509" },
+                        "第六节": { subject: "化学", class: "2524AP" }
+                    },
+                    "星期四": {
+                        // 无化学课
+                    },
+                    "星期五": {
+                        "第六节": { subject: "化学", class: "2509" }
+                    }
+                }
+            },
+            // 高二化学老师
+            {
+                name: "曾友良",
+                id: "110013269703",
+                grade: "高二",
+                schedule: {
+                    "星期二": {
+                        "第八节": { subject: "化学", class: "2416" }
+                    },
+                    "星期三": {
+                        "第六节": { subject: "化学", class: "2416" }
+                    },
+                    "星期四": {
+                        "第二节": { subject: "化学", class: "2416" }
+                    },
+                    "星期五": {
+                        "第四节": { subject: "化学", class: "2416" }
+                    }
+                }
+            },
+            {
+                name: "苏建祥",
+                id: "110013269789",
+                grade: "高二",
+                schedule: {
+                    "星期一": {
+                        "第三节": { subject: "化学", class: "2422" }
+                    },
+                    "星期二": {
+                        "第三节": { subject: "化学", class: "2422" }
+                    },
+                    "星期三": {
+                        "第二节": { subject: "化学", class: "2422" }
+                    },
+                    "星期四": {
+                        "第三节": { subject: "化学", class: "2422" }
+                    }
+                }
+            },
+            // 高三化学老师
+            {
+                name: "张子豪",
+                id: "110013350014",
+                grade: "高三",
+                schedule: {
+                    "星期一": {
+                        "第一节": { subject: "化学", class: "2308" },
+                        "第二节": { subject: "化学", class: "2309" }
+                    },
+                    "星期四": {
+                        "第二节": { subject: "化学", class: "2308" },
+                        "第三节": { subject: "化学", class: "2309" },
+                        "第五节": { subject: "化学", class: "2308" },
+                        "第七节": { subject: "化学", class: "2309" },
+                        "第八节": { subject: "化学", class: "2308" }
+                    },
+                    "星期三": {
+                        "第三节": { subject: "化学", class: "2309" }
+                    },
+                    "星期五": {
+                        "第六节": { subject: "化学", class: "2308" },
+                        "第七节": { subject: "化学", class: "2309" }
+                    }
+                }
+            },
+            {
+                name: "颜以晴",
+                id: "110013350015",
+                grade: "高三",
+                schedule: {
+                    "星期四": {
+                        "第一节": { subject: "化学", class: "2306" }
+                    },
+                    "星期一": {
+                        "第三节": { subject: "化学", class: "2320" },
+                        "第五节": { subject: "化学", class: "2306" }
+                    },
+                    "星期三": {
+                        "第六节": { subject: "化学", class: "2320" }
+                    },
+                    "星期五": {
+                        "第六节": { subject: "化学", class: "2306" },
+                        "第七节": { subject: "化学", class: "2320" }
+                    },
+                    "星期二": {
+                        "第七节": { subject: "化学", class: "2306" },
+                        "第八节": { subject: "化学", class: "2320" }
+                    }
+                }
+            }
+        ];
+
+        // 页面元素
+        const gradeSelect = document.getElementById('grade-select');
+        const teacherSelect = document.getElementById('teacher-select');
+        const searchBtn = document.getElementById('search-btn');
+        const scheduleTable = document.getElementById('schedule-table');
+        const scheduleCards = document.getElementById('schedule-cards');
+        const teacherInfo = document.getElementById('teacher-info');
+        const noData = document.getElementById('no-data');
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 年级选择变化事件
+            gradeSelect.addEventListener('change', function() {
+                const selectedGrade = this.value;
+                
+                // 清空教师选择
+                teacherSelect.innerHTML = '<option value="">请选择教师</option>';
+                teacherSelect.disabled = !selectedGrade;
+                
+                if (selectedGrade) {
+                    // 过滤该年级的化学教师
+                    const gradeTeachers = chemistryTeachers.filter(teacher => teacher.grade === selectedGrade);
+                    
+                    // 添加教师选项
+                    gradeTeachers.forEach(teacher => {
+                        const option = document.createElement('option');
+                        option.value = teacher.name;
+                        option.textContent = teacher.name;
+                        teacherSelect.appendChild(option);
+                    });
+                }
+                
+                // 重置显示
+                resetDisplay();
+            });
+            
+            // 搜索按钮点击事件
+            searchBtn.addEventListener('click', function() {
+                const selectedGrade = gradeSelect.value;
+                const selectedTeacher = teacherSelect.value;
+                
+                if (!selectedGrade || !selectedTeacher) {
+                    alert('请选择年级和教师');
+                    return;
+                }
+                
+                // 查找选中的教师
+                const teacher = chemistryTeachers.find(t => t.name === selectedTeacher && t.grade === selectedGrade);
+                
+                if (teacher) {
+                    displayTeacherInfo(teacher);
+                    displaySchedule(teacher);
+                } else {
+                    alert('未找到该教师的课表信息');
+                }
+            });
+            
+            // 初始状态
+            resetDisplay();
+        });
+
+        // 重置显示
+        function resetDisplay() {
+            teacherInfo.style.display = 'none';
+            scheduleCards.innerHTML = '';
+            scheduleTable.innerHTML = '';
+            noData.style.display = 'block';
+        }
+
+        // 显示教师信息
+        function displayTeacherInfo(teacher) {
+            teacherInfo.innerHTML = `
+                <h3>教师信息</h3>
+                <p><strong>姓名：</strong>${teacher.name}</p>
+                <p><strong>工号：</strong>${teacher.id}</p>
+                <p><strong>年级：</strong>${teacher.grade}</p>
+                <p><strong>学科：</strong>化学</p>
+            `;
+            teacherInfo.style.display = 'block';
+            noData.style.display = 'none';
+        }
+
+        // 显示课表
+        function displaySchedule(teacher) {
+            // 清空表格和卡片
+            scheduleTable.innerHTML = '';
+            scheduleCards.innerHTML = '';
+            
+            // 定义节次
+            const periods = [
+                "第一节", "第二节", "第三节", "第四节", "第五节", 
+                "第六节", "第七节", "第八节", "第九节"
+            ];
+            
+            // 创建桌面表格
+            if (window.innerWidth >= 768) {
+                // 创建表头
+                const headerRow = document.createElement('tr');
+                headerRow.innerHTML = '<th class="period">节次</th><th>星期一</th><th>星期二</th><th>星期三</th><th>星期四</th><th>星期五</th>';
+                scheduleTable.appendChild(headerRow);
+                
+                // 创建每一行的数据
+                periods.forEach(period => {
+                    const row = document.createElement('tr');
+                    
+                    // 添加节次单元格
+                    const periodCell = document.createElement('td');
+                    periodCell.className = 'period';
+                    periodCell.textContent = period;
+                    row.appendChild(periodCell);
+                    
+                    // 添加每一天的课程信息
+                    const days = ["星期一", "星期二", "星期三", "星期四", "星期五"];
+                    days.forEach(day => {
+                        const cell = document.createElement('td');
+                        
+                        if (teacher.schedule[day] && teacher.schedule[day][period]) {
+                            const course = teacher.schedule[day][period];
+                            cell.innerHTML = `
+                                <div class="course-info">
+                                    <strong>${course.subject}</strong><br>
+                                    ${course.class}
+                                </div>
+                            `;
+                        } else {
+                            cell.textContent = '-';
+                        }
+                        
+                        row.appendChild(cell);
+                    });
+                    
+                    scheduleTable.appendChild(row);
+                });
+            } else {
+                // 创建移动端卡片布局
+                const days = ["星期一", "星期二", "星期三", "星期四", "星期五"];
+                
+                days.forEach(day => {
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'day-card';
+                    
+                    // 添加日期标题
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    dayHeader.textContent = day;
+                    dayCard.appendChild(dayHeader);
+                    
+                    // 添加课程列表
+                    const periodsList = document.createElement('div');
+                    periodsList.className = 'periods-list';
+                    
+                    periods.forEach(period => {
+                        const periodItem = document.createElement('div');
+                        periodItem.className = 'period-item';
+                        
+                        // 节次时间
+                        const periodTime = document.createElement('div');
+                        periodTime.className = 'period-time';
+                        periodTime.textContent = period;
+                        periodItem.appendChild(periodTime);
+                        
+                        // 课程详情
+                        const courseDetails = document.createElement('div');
+                        courseDetails.className = 'course-details';
+                        
+                        if (teacher.schedule[day] && teacher.schedule[day][period]) {
+                            const course = teacher.schedule[day][period];
+                            courseDetails.innerHTML = `
+                                <div class="course-subject">${course.subject}</div>
+                                <div class="course-class">${course.class}</div>
+                            `;
+                        } else {
+                            courseDetails.innerHTML = '<div class="no-class">无课</div>';
+                        }
+                        
+                        periodItem.appendChild(courseDetails);
+                        periodsList.appendChild(periodItem);
+                    });
+                    
+                    dayCard.appendChild(periodsList);
+                    scheduleCards.appendChild(dayCard);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
