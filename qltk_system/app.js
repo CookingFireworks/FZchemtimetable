@@ -17,10 +17,10 @@ class ListeningAssistant {
         }
     }
 
-    // 加载教师数据
+    // 修改数据加载路径为相对路径
     async loadTeacherData() {
-        // 从GitHub RAW链接加载数据
-        const response = await fetch('https://raw.githubusercontent.com/yourusername/yourrepo/main/data/teachers.json');
+        // 使用相对路径，因为文件在qltk文件夹内
+        const response = await fetch('./data/teachers.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
