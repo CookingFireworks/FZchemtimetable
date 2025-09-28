@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青蓝听课助手 - 专业听课规划工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+    
+    <div class="container">
+        <header>
+            <h1>青蓝听课助手</h1>
+            <div class="subtitle">专业听课规划工具 - 青出于蓝而胜于蓝</div>
+        </header>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label for="subject-select">选择学科：</label>
+                <select id="subject-select">
+                    <option value="chemistry">化学</option>
+                    <!-- 可以扩展其他学科 -->
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="my-select">选择自己：</label>
+                <select id="my-select">
+                    <option value="">请选择您的姓名</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="other-select">选择听课对象：</label>
+                <select id="other-select">
+                    <option value="">请选择听课对象</option>
+                </select>
+            </div>
+            
+            <button class="search-btn" id="search-btn">生成听课计划</button>
+        </div>
+        
+        <div class="teacher-info" id="teacher-info"></div>
+        
+        <div class="schedule-container">
+            <table id="schedule-table"></table>
+        </div>
+        
+        <div class="suggestions" id="suggestions"></div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="color-box my"></div>
+                <span>我的上课时间</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box other"></div>
+                <span>听课对象的上课时间</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box available"></div>
+                <span>适合听课的时间（点击可标记）</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据文件将通过JavaScript动态加载 -->
+    <script src="app.js"></script>
+</body>
+</html>
