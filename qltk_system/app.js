@@ -1,8 +1,8 @@
-// 应用程序主模块
-class ListeningAssistant {
+// 应用程序主模块 - 专用于化学教师
+class ChemistryListeningAssistant {
     constructor() {
         this.teachersData = null;
-        this.currentTeachers = [];
+        this.chemistryTeachers = [];
         this.initializeApp();
     }
 
@@ -11,70 +11,30 @@ class ListeningAssistant {
         try {
             await this.loadTeacherData();
             this.setupEventListeners();
-            this.populateSubjectSelect();
+            this.populateTeacherSelects();
         } catch (error) {
             this.showNotification('加载教师数据失败: ' + error.message, true);
+            console.error('加载数据错误:', error);
         }
     }
 
-    // 修改数据加载路径为相对路径
+    // 加载教师数据
     async loadTeacherData() {
-        // 使用相对路径，因为文件在qltk文件夹内
+        // 使用相对路径加载数据
         const response = await fetch('./data/teachers.json');
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP错误! 状态码: ${response.status}`);
         }
         this.teachersData = await response.json();
+        this.chemistryTeachers = this.teachersData.chemistry || [];
     }
 
     // 设置事件监听器
     setupEventListeners() {
-        const subjectSelect = document.getElementById('subject-select');
         const searchBtn = document.getElementById('search-btn');
-
-        subjectSelect.addEventListener('change', (e) => {
-            this.onSubjectChange(e.target.value);
-        });
-
         searchBtn.addEventListener('click', () => {
             this.generateSchedule();
         });
-    }
-
-    // 学科选择变化
-    onSubjectChange(subject) {
-        if (subject && this.teachersData[subject]) {
-            this.currentTeachers = this.teachersData[subject];
-            this.populateTeacherSelects();
-        } else {
-            this.currentTeachers = [];
-            this.clearTeacherSelects();
-        }
-    }
-
-    // 填充学科选择
-    populateSubjectSelect() {
-        const subjectSelect = document.getElementById('subject-select');
-        subjectSelect.innerHTML = '<option value="">请选择学科</option>';
-        
-        Object.keys(this.teachersData).forEach(subject => {
-            const option = document.createElement('option');
-            option.value = subject;
-            option.textContent = this.getSubjectDisplayName(subject);
-            subjectSelect.appendChild(option);
-        });
-    }
-
-    // 获取学科显示名称
-    getSubjectDisplayName(subject) {
-        const names = {
-            'chemistry': '化学',
-            'physics': '物理',
-            'math': '数学',
-            'english': '英语',
-            'chinese': '语文'
-        };
-        return names[subject] || subject;
     }
 
     // 填充教师选择框
@@ -85,7 +45,7 @@ class ListeningAssistant {
         this.clearSelect(mySelect);
         this.clearSelect(otherSelect);
 
-        this.currentTeachers.forEach(teacher => {
+        this.chemistryTeachers.forEach(teacher => {
             const option1 = document.createElement('option');
             option1.value = teacher.name;
             option1.textContent = teacher.name;
@@ -101,12 +61,6 @@ class ListeningAssistant {
         selectElement.innerHTML = '<option value="">请选择</option>';
     }
 
-    // 清空教师选择框
-    clearTeacherSelects() {
-        this.clearSelect(document.getElementById('my-select'));
-        this.clearSelect(document.getElementById('other-select'));
-    }
-
     // 生成课表
     generateSchedule() {
         const myTeacherName = document.getElementById('my-select').value;
@@ -114,8 +68,8 @@ class ListeningAssistant {
 
         if (!this.validateInputs(myTeacherName, otherTeacherName)) return;
 
-        const myTeacher = this.currentTeachers.find(t => t.name === myTeacherName);
-        const otherTeacher = this.currentTeachers.find(t => t.name === otherTeacherName);
+        const myTeacher = this.chemistryTeachers.find(t => t.name === myTeacherName);
+        const otherTeacher = this.chemistryTeachers.find(t => t.name === otherTeacherName);
 
         if (myTeacher && otherTeacher) {
             this.displayTeacherInfo(myTeacher, otherTeacher);
@@ -147,12 +101,12 @@ class ListeningAssistant {
             <div class="teacher-card">
                 <h3>我的信息</h3>
                 <p><strong>姓名：</strong>${myTeacher.name}</p>
-                <p><strong>学科：</strong>${this.getSubjectDisplayName(document.getElementById('subject-select').value)}</p>
+                <p><strong>学科：</strong>化学</p>
             </div>
             <div class="teacher-card other">
                 <h3>听课对象信息</h3>
                 <p><strong>姓名：</strong>${otherTeacher.name}</p>
-                <p><strong>学科：</strong>${this.getSubjectDisplayName(document.getElementById('subject-select').value)}</p>
+                <p><strong>学科：</strong>化学</p>
             </div>
         `;
     }
@@ -274,6 +228,16 @@ class ListeningAssistant {
             daySuggestion.innerHTML = `<strong>${day}</strong>：${timesText}`;
             suggestions.appendChild(daySuggestion);
         }
+
+        // 添加最佳听课时间建议
+        if (availableTimes.length > 0) {
+            const bestTime = availableTimes[0];
+            const bestSuggestion = document.createElement('div');
+            bestSuggestion.className = 'suggestion-item';
+            bestSuggestion.style.borderLeftColor = '#3498db';
+            bestSuggestion.innerHTML = `<strong>推荐时间</strong>：${bestTime.day}${bestTime.period}（${bestTime.class}班），这是本周最早的可听课时间。`;
+            suggestions.appendChild(bestSuggestion);
+        }
     }
 
     // 显示通知
@@ -296,5 +260,5 @@ class ListeningAssistant {
 
 // 初始化应用
 document.addEventListener('DOMContentLoaded', () => {
-    new ListeningAssistant();
+    new ChemistryListeningAssistant();
 });
