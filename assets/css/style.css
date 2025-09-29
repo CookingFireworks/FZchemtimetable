@@ -40,7 +40,7 @@ h1 {
 
 /* 模态框样式 */
 .modal {
-    display: flex;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
