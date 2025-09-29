@@ -677,7 +677,7 @@ async function loadTeachersData() {
 // 关闭欢迎模态框
 function setupModalClose() {
     closeModalBtn.addEventListener('click', function() {
-        welcomeModal.style.display = 'none';
+        welcomeModal.style.display = 'flex';
     });
 }
 
