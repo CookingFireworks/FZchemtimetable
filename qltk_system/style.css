@@ -355,4 +355,31 @@ th {
     font-style: italic;
     background: #f9f9f9;
     border-radius: 8px;
+
+}
+.timetable-link {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeaea;
+}
+
+.timetable-link a {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.timetable-link a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    text-decoration: none;
+    color: white;
 }
