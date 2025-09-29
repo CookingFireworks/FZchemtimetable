@@ -1,0 +1,232 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+    color: #333;
+    padding: 15px;
+    min-height: 100vh;
+    padding-bottom: 80px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #1565c0;
+    margin-bottom: 5px;
+    font-size: 1.6rem;
+}
+
+.subtitle {
+    color: #5d99c6;
+    font-size: 0.9rem;
+}
+
+/* 模态框样式 */
+.modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #777;
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+}
+
+.modal h2 {
+    color: #1565c0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* 选择区域样式 */
+.selectors {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #1565c0;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #bbdefb;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    color: #333;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: #1565c0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #0d47a1;
+}
+
+/* 课表样式 */
+.schedule-container {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.teacher-info {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #bbdefb;
+}
+
+.teacher-name {
+    font-size: 1.5rem;
+    color: #1565c0;
+    margin-bottom: 5px;
+}
+
+.teacher-grade {
+    color: #5d99c6;
+    font-size: 1rem;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #bbdefb;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.schedule-table th {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.day-header {
+    background-color: #bbdefb;
+    font-weight: bold;
+}
+
+/* ASCII艺术样式 */
+.ascii-art {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    font-family: monospace;
+    white-space: pre;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.art-title {
+    text-align: center;
+    color: #1565c0;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .schedule-table th, .schedule-table td {
+        padding: 5px;
+        font-size: 0.75rem;
+    }
+    
+    .ascii-art {
+        font-size: 0.6rem;
+    }
+}
